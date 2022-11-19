@@ -1,20 +1,20 @@
 import mysql.connector as msql
 from mysql.connector import Error
-from private.my_password import my_password #contraseña de MySQL
+from private.my_password import my_password #MySQL password
 import pandas as pd
 
-def add_fk(column_name,database_name,table_name,parent_table):
+def add_fk(column_name,database_name,table_name,parent_table,port=3306):
     """ 
         Adds foreing keys
     """
     
     try: 
-        conn = msql.connect(host='localhost', database=database_name, user='root', password=my_password)
+        conn = msql.connect(host='localhost', port=port,database=database_name, user='root', password=my_password)
         if conn.is_connected():
             cursor = conn.cursor()
             cursor.execute("select database();")
             record = cursor.fetchone()
-            print("Conectado a database: ", record)
+            print("Conecting to database: ", record)
         
         cursor.execute('SET FOREIGN_KEY_CHECKS=0;')
 
@@ -26,4 +26,4 @@ def add_fk(column_name,database_name,table_name,parent_table):
             
         conn.commit()
     except Error as e:
-        print("Error al conectar con MySQL", e)
+        print("Error", e)
