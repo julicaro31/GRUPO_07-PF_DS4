@@ -3,7 +3,7 @@ from mysql.connector import Error
 from private.my_password import my_password #MySQL password
 import pandas as pd
 
-def load_data(dataset_path,database_name,table_name,port=3306):
+def load_data(dataset_path,database_name,table_name,host='localhost',user='root',port=3306):
     """ 
         Loads data in table.
     """
@@ -13,13 +13,13 @@ def load_data(dataset_path,database_name,table_name,port=3306):
     x = x.strip(',')
     
     try: 
-        conn = msql.connect(host='localhost',port=port,database=database_name, user='root', password=my_password)
+        conn = msql.connect(host=host,port=port,database=database_name, user=user, password=my_password)
         if conn.is_connected():
             cursor = conn.cursor()
             cursor.execute("select database();")
             record = cursor.fetchone()
             print("Conecting to database: ", record)
-        print("Insertando datos...")
+        print("Loading data...")
         for i,row in df_table.iterrows():
             
             sql = f"INSERT INTO {database_name}.{table_name} VALUES ({x})"
