@@ -161,6 +161,6 @@ cython_debug/
 
 .DS_Store
 
-/data
+/_data
+/_clean_data
 load/private
-extract_transform/redfin.ipynb
