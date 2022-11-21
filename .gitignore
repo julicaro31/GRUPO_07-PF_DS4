@@ -164,4 +164,4 @@ cython_debug/
 /_data
 /_clean_data
 load/private
-load_local_test/private
+local_test
