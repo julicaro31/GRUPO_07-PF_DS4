@@ -164,4 +164,3 @@ cython_debug/
 /data
 load/private
 extract_transform/redfin.ipynb
-clean_data/listing_prices.csv
