@@ -3,9 +3,10 @@ from mysql.connector import Error
 from private.my_password import my_password #MySQL password
 import pandas as pd
 
-def add_fk(column_name,database_name,table_name,parent_table,constraint,host='localhost',user='root',port=3306):
+def drop_table(database_name,table_name,host='localhost',user='root',port=3306):
+    
     """ 
-        Adds foreing keys
+        Drops table.
     """
     
     try: 
@@ -15,15 +16,10 @@ def add_fk(column_name,database_name,table_name,parent_table,constraint,host='lo
             cursor.execute("select database();")
             record = cursor.fetchone()
             print("Conecting to database: ", record)
-        
-        cursor.execute('SET FOREIGN_KEY_CHECKS=0;')
 
-        sql = f'ALTER TABLE {table_name} ADD CONSTRAINT {constraint} FOREIGN KEY ({column_name}) REFERENCES {parent_table}({column_name});'
-        print(sql)
-        cursor.execute(sql)
-
-        cursor.execute('SET FOREIGN_KEY_CHECKS=1;')
-            
-        conn.commit()
+            sql = f"DROP TABLE {table_name}"
+            cursor.execute(sql)
+            conn.commit()
+            print(f"Table {table_name} has been dropped")
     except Error as e:
         print("Error", e)
