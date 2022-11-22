@@ -19,12 +19,14 @@ def load_data(dataset_path,database_name,table_name,host='localhost',user='root'
             cursor.execute("select database();")
             record = cursor.fetchone()
             print("Conecting to database: ", record)
-        print("Loading data...")
-        for i,row in df_table.iterrows():
+            cursor.execute('SET FOREIGN_KEY_CHECKS=0;')
+            print("Loading data...")
+            for i,row in df_table.iterrows():
             
-            sql = f"INSERT INTO {database_name}.{table_name} VALUES ({x})"
-            cursor.execute(sql, tuple(row))
+                sql = f"INSERT INTO {database_name}.{table_name} VALUES ({x})"
+                cursor.execute(sql, tuple(row))
             
-            conn.commit()
+                conn.commit()
+            cursor.execute('SET FOREIGN_KEY_CHECKS=1;')
     except Error as e:
         print("Error", e)
