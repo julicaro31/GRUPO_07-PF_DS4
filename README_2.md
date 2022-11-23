@@ -19,6 +19,6 @@ Using Python, mostly Pandas library, we transform the data to save the informati
 
 We upload the data to a MySQL data base in the cloud using RDS from Amazon Web Services.
 The data is uploaded using Python, which connects to MySQL with ***mysql.connector***.
-
+The uploads are scheduled using Airflow DAGs.
 
 
