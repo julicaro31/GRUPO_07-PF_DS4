@@ -50,9 +50,9 @@ def load_initial():
 
 def load():
     
-    load_data(os.path.join(os.getcwd(),'datasets','listing_prices.csv'),'housing_market','listing_price')
-    load_data(os.path.join(os.getcwd(),'datasets','rental_prices.csv'),'housing_market','rental_price')
-    load_data(os.path.join(os.getcwd(),'datasets','crime_rate.csv'),'housing_market','crime_rate')
-    load_data(os.path.join(os.getcwd(),'datasets','homes_sold_&_total_2022.csv'),'housing_market','sells_inventory')
-    load_data(os.path.join(os.getcwd(),'datasets','price_drops_2022.csv'),'housing_market','price_drops')
-    load_data(os.path.join(os.getcwd(),'datasets','weather_events.csv'),'housing_market','weather_event')
+    load_data(os.path.join(os.getcwd(),'datasets','listing_prices.csv'),'housing_market','listing_price',host=my_aws_endpoint)
+    load_data(os.path.join(os.getcwd(),'datasets','rental_prices.csv'),'housing_market','rental_price',host=my_aws_endpoint)
+    load_data(os.path.join(os.getcwd(),'datasets','crime_rate.csv'),'housing_market','crime_rate',host=my_aws_endpoint)
+    load_data(os.path.join(os.getcwd(),'datasets','homes_sold_&_total_2022.csv'),'housing_market','sells_inventory',host=my_aws_endpoint)
+    load_data(os.path.join(os.getcwd(),'datasets','price_drops_2022.csv'),'housing_market','price_drops',host=my_aws_endpoint)
+    load_data(os.path.join(os.getcwd(),'datasets','weather_events.csv'),'housing_market','weather_event',host=my_aws_endpoint)
