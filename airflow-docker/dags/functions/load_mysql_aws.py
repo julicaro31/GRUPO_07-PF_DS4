@@ -1,10 +1,9 @@
 import os
-import pandas as pd
 from functions.add_foreign_key import add_fk
 from functions.create_database import create_database
 from functions.create_table import create_table
 from functions.load_data import load_data
-from private.my_aws_endpoint import my_aws_endpoint
+from functions.private.my_aws_endpoint import my_aws_endpoint
 
 # If your docker is running on Windows or Mac replace localhost with host.docker.internal to connect to your local MySQL
 

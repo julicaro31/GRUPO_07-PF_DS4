@@ -17,8 +17,18 @@ To install dependencies:
 - Create the files ***requirements.txt*** and  ***Dockerfile***
 - Replace (in .yalm file) **image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.1.0}** with **build: .**
 
-We create the following folders (they will be sincronized with the containers):
+AWS configuration:
+- We add the AWS credentials as ENV variables in docker-compose.yaml file
+- We also add the AWS CLI image which can be used to access AWS S3 objects to verify if required data has been stored on S3 or not:
 
+awscli:
+      image: amazon/aws-cli
+      entrypoint: tail -f /dev/null
+      environment:      
+        <<: *airflow-common-env
+
+
+We create the following folders (they will be sincronized with the containers):
 - mkdir ./dags ./plugins ./logs ./datasets
 
 To make sure that user permissions are the same between those folders and the containers (in Linux or MacOS):

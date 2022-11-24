@@ -1,7 +1,6 @@
 import mysql.connector as msql
 from mysql.connector import Error
-from private.my_password import my_password #MySQL password
-import pandas as pd
+from functions.private.my_password import my_password #MySQL password
 
 def add_fk(column_name,database_name,table_name,parent_table,constraint,column_name_parent=None,host='localhost',user='root',port=3306):
     """ 

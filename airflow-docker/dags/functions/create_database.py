@@ -1,6 +1,6 @@
 import mysql.connector as msql
 from mysql.connector import Error
-from private.my_password import my_password #MySQL password
+from functions.private.my_password import my_password #MySQL password
 
 def create_database(database_name:str,host = 'localhost',port=3306,user='root'):
     """Creates MySQL database"""

@@ -163,12 +163,10 @@ cython_debug/
 
 /_data
 /_clean_data
-load/private
+private/
 local_test
-airflow/airflow-docker/dags/private
-airflow/airflow-docker/dags/load_mysql_local.py
-airflow/airflow-docker/dags/dag_local.py
-airflow/airflow-docker/datasets
-airflow/airflow-docker/logs
-airflow/airflow-docker/plugins
-airflow/airflow-docker/.env
+airflow-docker/datasets
+airflow-docker/logs
+airflow-docker/plugins
+airflow-docker/.env
+airflow-docker/docker-compose.yaml

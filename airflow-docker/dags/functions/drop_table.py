@@ -1,7 +1,6 @@
 import mysql.connector as msql
 from mysql.connector import Error
-from private.my_password import my_password #MySQL password
-import pandas as pd
+from functions.private.my_password import my_password #MySQL password
 
 def drop_table(database_name,table_name,host='localhost',user='root',port=3306):
     
