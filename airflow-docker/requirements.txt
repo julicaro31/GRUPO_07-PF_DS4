@@ -1,2 +1,4 @@
 mysql-connector-python==8.0.31
 apache-airflow-providers-amazon==6.1.0
+boto3==1.26.16
+s3fs==0.4.2
