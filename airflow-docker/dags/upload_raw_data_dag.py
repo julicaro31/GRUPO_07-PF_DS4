@@ -15,27 +15,11 @@ def upload_to_s3(folder: str, bucket_name: str) -> None:
     """Uploads new files to S3 bucket""" 
     hook = S3Hook('s3_conn')
     for file in os.listdir(path=folder):
-        if '.csv' in file:
+        if ('.csv' in file) or ('.tsv' in file):
             try:
                 hook.load_file(filename=os.path.join(folder,file), key=file, bucket_name=bucket_name)
             except ValueError:
                 pass
-
-with DAG(
-    dag_id='s3_dag',
-    schedule_interval='@once',
-    start_date=datetime(2022, 11, 23),
-    catchup=False
-) as dag:
-
-    task_upload_to_s3 = PythonOperator(
-        task_id='upload_to_s3',
-        python_callable=upload_to_s3,
-        op_kwargs={
-            'folder': os.path.join('datasets','clean_data'),
-            'bucket_name': 'cleandatagrupo07'
-        }
-    )
 
 
 with DAG(
@@ -45,7 +29,7 @@ with DAG(
     catchup=False
 ) as dag:
 
-    task_upload_to_s3 = PythonOperator(
+    task_upload_to_s3_raw_data = PythonOperator(
         task_id='upload_to_s3',
         python_callable=upload_to_s3,
         op_kwargs={
