@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from functions.private.s3_aws import access_key, secret_access_key
 from functions.us_state_abbrev import us_state_to_abbrev
+import re
 
 def transform_list_rental_price():
 
@@ -151,3 +152,77 @@ def transform_redfin_data():
 
     price_drops_id_2022.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','price_drops_2022_prueba.csv'),columns=['Unique_City_ID','PeriodBegin', 'PeriodEnd','PriceDrops','PriceDrops_mom', 'PriceDrops_yoy'],index=False)
 
+
+def transform_income():
+    # Personal income per capita by Metropolitan Statistical Area (MSA)
+    df = pd.read_csv(f"s3://rawdatagrupo07/personal_income_2011-2021bymetro.csv",
+    storage_options={
+        "key": access_key,
+        "secret": secret_access_key
+    },
+    )
+    df.drop(index=0, inplace=True)
+    df.reset_index(inplace=True, drop=True)
+    geo = df['GeoName'].str.split(pat=',', expand=True)
+    geo
+    msa = geo[0]
+    state = geo[1].str.split(expand=True)
+    state = state[0]
+    df = pd.concat([msa, state, df], axis=1)
+    df.drop(['GeoName'], axis=1, inplace=True )
+    df.columns = ['MSA', 'State', 'Fips_Code', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021']
+    metro = pd.melt(df, id_vars=['MSA','State','Fips_Code'],value_vars=['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021'],var_name='Year',value_name='Personal_Income')
+    metro.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','incomebymsa.csv'), index=False)
+
+    # Personal income per capita by County
+    
+    df = pd.read_csv(f"s3://rawdatagrupo07/personal_income_2017-2021bycounty.csv",
+    storage_options={
+        "key": access_key,
+        "secret": secret_access_key
+    },
+    )
+
+    df['State'] = df['GeoName'].str.split(pat=',')
+    df['State'] = df['State'].apply(lambda x: x[-1])
+
+    df['County'] = df['GeoName'].str.split(pat=',')
+    df['County'] = df['County'].apply(lambda x: x[0])
+    df['County'] = df['County'].str.split(pat='+')
+    df['County'] = df['County'].apply(lambda x: x[0])
+    df = df[['County', 'State', 'GeoFips', '2017', '2018', '2019', '2020', '2021']]
+
+    county = pd.melt(df, id_vars=['County','State','GeoFips'],value_vars=['2017', '2018', '2019', '2020', '2021'],var_name='Year',value_name='Personal_Income')
+    county.rename(columns={'GeoFips': 'Fips_Code'}, inplace=True)
+
+    county['County'] = county['County'].astype(str).apply(lambda x: re.sub('\(.+\)','',x))
+    county['County'] = county['County'].str.rstrip()
+    county['State'] = county['State'].str.replace('*', '', regex=False)
+    county['State'] = county['State'].str.lstrip()
+    county['Personal_Income'] = county['Personal_Income'].replace('(NA)', None)
+
+    county.isnull().sum()
+    county.dropna(inplace=True)
+    county['Personal_Income'] = county['Personal_Income'].astype(int)
+    county.reset_index(inplace=True, drop=True)
+    county.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','incomebycounty2.csv'), index=False)
+
+    # Personal income per capita by State
+
+    df = pd.read_csv(f"s3://rawdatagrupo07/personal_income_2011-2021bystate.csv",
+    storage_options={
+        "key": access_key,
+        "secret": secret_access_key
+    },
+    )
+
+    df.drop(index=0, inplace=True)
+    df.reset_index(inplace=True, drop=True)
+
+    df['GeoName'] = df['GeoName'].str.replace('*', '', regex=False)
+    df['GeoName'] = df['GeoName'].str.lstrip()
+
+    state = pd.melt(df, id_vars=['GeoName','GeoFips'],value_vars=['2011', '2012', '2013', '2014', '2015', '2016','2017', '2018', '2019', '2020', '2021'],var_name='Year',value_name='Personal_Income')
+    state.rename(columns={'GeoFips': 'Fips_Code', 'GeoName': 'State'}, inplace=True)
+
+    state.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','incomebystate.csv'), index=False)

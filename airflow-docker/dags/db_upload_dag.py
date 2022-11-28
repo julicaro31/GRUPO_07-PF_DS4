@@ -2,7 +2,7 @@ from airflow import DAG
 from datetime import datetime
 from airflow.operators.python_operator import PythonOperator
 
-from functions.load_mysql_aws import load_initial,load
+from functions.load_mysql import load_initial,load
 
 
 with DAG(
