@@ -64,6 +64,10 @@ def load_initial():
     create_table('housing_market','population',variables,host=host,user=user)
     add_fk('IdCity','housing_market','population','city','foreign_IdCity_population',host=host,user=user)
 
+    variables = 'County VARCHAR(255),State VARCHAR(25),Fips_Code INTEGER,Year INTEGER,Personal_Income INTEGER'
+    create_table('housing_market','personal_income',variables,host=my_aws_endpoint,user='admin')
+    add_fk('State','housing_market','personal_income','state_code','foreign_state_code_personal_income',host=my_aws_endpoint,user='admin')
+
 
 def load():
 
@@ -76,3 +80,5 @@ def load():
     load_data(os.path.join(os.getcwd(),'datasets','clean_data','price_drops_2022.csv'),'housing_market','price_drops',host=host,user=user)
     load_data(os.path.join(os.getcwd(),'datasets','clean_data','weather_events.csv'),'housing_market','weather_event',host=host,user=user)
     load_data(os.path.join(os.getcwd(),'datasets','clean_data','population.csv'),'housing_market','population',host=host,user=user)
+    load_data(os.path.join(os.getcwd(),'datasets','clean_data','incomebycounty1.zip'),'housing_market','personal_income',host=my_aws_endpoint,user='admin')
+    load_data(os.path.join(os.getcwd(),'datasets','clean_data','incomebycounty2.zip'),'housing_market','personal_income',host=my_aws_endpoint,user='admin')

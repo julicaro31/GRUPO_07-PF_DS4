@@ -226,3 +226,78 @@ def transform_income():
     state.rename(columns={'GeoFips': 'Fips_Code', 'GeoName': 'State'}, inplace=True)
 
     state.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','incomebystate.csv'), index=False)
+
+
+def transform_population():
+    population2010 = pd.read_csv(f"s3://rawdatagrupo07/SUB-EST2020_ALL.csv",
+    storage_options={
+        "key": access_key,
+        "secret": secret_access_key
+    },encoding = "ISO-8859-1"
+    )
+
+    population2021 = pd.read_csv(f"s3://rawdatagrupo07/sub-est2021_all.csv",
+        storage_options={
+            "key": access_key,
+            "secret": secret_access_key
+    },engine='python',encoding='latin1'
+    )
+
+    # Dataframe population2010
+    population2010['SUMLEV']= population2010['SUMLEV'].astype(str)
+    population2010['STATE']= population2010['STATE'].astype(str)
+    population2010['COUNTY']= population2010['COUNTY'].astype(str)
+    population2010[ 'PLACE']= population2010[ 'PLACE'].astype(str)
+    population2010['COUSUB']= population2010['COUSUB'].astype(str)
+    population2010['CONCIT']= population2010['CONCIT'].astype(str)
+    population2010['PRIMGEO_FLAG']= population2010['PRIMGEO_FLAG'].astype(str)
+
+    #Dataframe population2021
+    population2021['SUMLEV']= population2021['SUMLEV'].astype(str)
+    population2021['STATE']= population2021['STATE'].astype(str)
+    population2021['COUNTY']= population2021['COUNTY'].astype(str)
+    population2021[ 'PLACE']= population2021[ 'PLACE'].astype(str)
+    population2021['COUSUB']= population2021['COUSUB'].astype(str)
+    population2021['CONCIT']= population2021['CONCIT'].astype(str)
+    population2021['PRIMGEO_FLAG']= population2021['PRIMGEO_FLAG'].astype(str)
+
+    population2010['Indicator']= population2010[['SUMLEV','STATE','COUNTY','PLACE','COUSUB','CONCIT','PRIMGEO_FLAG','FUNCSTAT']].apply(''.join, axis = 1)
+    population2021['Indicator']= population2021[['SUMLEV','STATE','COUNTY','PLACE','COUSUB','CONCIT','PRIMGEO_FLAG','FUNCSTAT']].apply(''.join, axis = 1)
+
+    population= pd.merge(population2010,population2021, how = 'inner', left_on='Indicator', right_on='Indicator')
+    population = population[['NAME_x', 'STNAME_x', 'POPESTIMATE2010', 'POPESTIMATE2011',
+       'POPESTIMATE2012', 'POPESTIMATE2013', 'POPESTIMATE2014',
+       'POPESTIMATE2015', 'POPESTIMATE2016', 'POPESTIMATE2017',
+       'POPESTIMATE2018', 'POPESTIMATE2019',
+       'POPESTIMATE2020_x', 'POPESTIMATE2021']]
+
+    population['NAME_x']= population['NAME_x'].str.strip('city')
+    population['NAME_x']= population['NAME_x'].str.strip()
+
+    population['NAME_x']= population['NAME_x'].str.strip('town')
+    population['NAME_x']= population['NAME_x'].str.strip()
+
+    population = population.rename(columns= {'NAME_x':'City'})
+    population = population.rename(columns= {'STNAME_x':'State'})
+    population = population.rename(columns= {'POPESTIMATE2020_x':'POPESTIMATE2020'})
+
+    population['State'] = population.State.astype(str).apply(lambda x: us_state_to_abbrev[x])
+    cities = pd.read_csv(f"s3://cleandatagrupo07/cities.csv",
+        storage_options={
+            "key": access_key,
+            "secret": secret_access_key
+        }
+    )
+
+    df3 = pd.merge(cities, population, how = 'inner', on =['City', 'State'])
+
+    df3.drop_duplicates(subset = ['Unique_City_ID'], keep= 'first')
+    df3.drop(['City','County','State'],axis=1,inplace=True)
+    df3.drop_duplicates(subset=['Unique_City_ID'],inplace=True)
+    values = [i for i in range(2010,2022)]
+    keys = [f"POPESTIMATE{i}" for i in range(2010,2022)]
+    df3.rename(columns=dict(zip(keys, values)),inplace=True)
+    df_melt = pd.melt(df3, id_vars =['Unique_City_ID'], value_vars = values)
+    df_melt.rename(columns={'variable':'Year','value':'PopEstimate'},inplace=True)
+
+    df_melt.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','population.csv'), index=False)
