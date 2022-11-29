@@ -21,6 +21,7 @@ def upload_to_s3(folder: str, bucket_name: str) -> None:
             except ValueError:
                 pass
 
+# This dag upload all our raw data to an S3 bucket
 
 with DAG(
     dag_id='s3_dag_raw_data',

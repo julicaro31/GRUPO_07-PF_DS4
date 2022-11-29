@@ -4,6 +4,9 @@ from functions.private.s3_aws import access_key, secret_access_key
 from functions.us_state_abbrev import us_state_to_abbrev
 import re
 
+# Functions with the transform steps for each file that corresponds to a certain table in the database.
+# For more information about the exploratory data analysis check the folder called extract_transform
+
 def transform_list_rental_price():
 
     header = pd.read_csv(f"s3://rawdatagrupo07/City_time_series.csv",

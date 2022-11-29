@@ -5,12 +5,15 @@ from functions.create_database import create_database
 from functions.create_table import create_table
 from functions.load_data import load_data
 from functions.private.my_aws_endpoint import my_aws_endpoint
+from airflow.models import DAG
+from airflow.operators.python import PythonOperator
 
 # If your docker is running on Windows or Mac replace host with host.docker.internal to connect to your local MySQL
 host=my_aws_endpoint
 user='admin'
 
 def load_initial():
+    """Creates database and tables with their primary and foreign keys"""
     create_database('housing_market',host=host,user=user)
     
     variables_city = 'IdCity VARCHAR(255) NOT NULL,City VARCHAR(255) NOT NULL,County VARCHAR(255) NOT NULL, State VARCHAR(255) NOT NULL,PRIMARY KEY(IdCity)'
@@ -68,17 +71,13 @@ def load_initial():
     create_table('housing_market','personal_income',variables,host=my_aws_endpoint,user='admin')
     add_fk('State','housing_market','personal_income','state_code','foreign_state_code_personal_income',host=my_aws_endpoint,user='admin')
 
-
-def load():
-
     load_data(os.path.join(os.getcwd(),'datasets','clean_data','cities.csv'),'housing_market','city',host=host,user=user)
     load_data(os.path.join(os.getcwd(),'datasets','clean_data','states_id.csv'),'housing_market','state_code',host=host,user=user)
-    load_data(os.path.join(os.getcwd(),'datasets','clean_data','listing_prices.csv'),'housing_market','listing_price',host=host,user=user)
-    load_data(os.path.join(os.getcwd(),'datasets','clean_data','rental_prices.csv'),'housing_market','rental_price',host=host,user=user)
-    load_data(os.path.join(os.getcwd(),'datasets','clean_data','crime_rate.csv'),'housing_market','crime_rate',host=host,user=user)
-    load_data(os.path.join(os.getcwd(),'datasets','clean_data','homes_sold_&_total_2022.csv'),'housing_market','sells_inventory',host=host,user=user)
-    load_data(os.path.join(os.getcwd(),'datasets','clean_data','price_drops_2022.csv'),'housing_market','price_drops',host=host,user=user)
-    load_data(os.path.join(os.getcwd(),'datasets','clean_data','weather_events.csv'),'housing_market','weather_event',host=host,user=user)
-    load_data(os.path.join(os.getcwd(),'datasets','clean_data','population.csv'),'housing_market','population',host=host,user=user)
-    load_data(os.path.join(os.getcwd(),'datasets','clean_data','incomebycounty1.zip'),'housing_market','personal_income',host=my_aws_endpoint,user='admin')
-    load_data(os.path.join(os.getcwd(),'datasets','clean_data','incomebycounty2.zip'),'housing_market','personal_income',host=my_aws_endpoint,user='admin')
+
+def load_to_mysql(file_name,previous_task_id,**kwargs):
+    """Loads file to database depending on the return value from the previous task"""
+    ti = kwargs['ti']
+    new = ti.xcom_pull(key='new_file', task_ids=previous_task_id)
+    if new:
+        load_data(os.path.join(os.getcwd(),'datasets','clean_data',file_name),'housing_market','city',host=host,user=user)
+

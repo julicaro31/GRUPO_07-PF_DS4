@@ -4,20 +4,22 @@ from airflow.models import DAG
 from airflow.operators.python import PythonOperator
 from airflow.hooks.S3_hook import S3Hook
 from functions.transform import transform_list_rental_price,transform_crime_rate,transform_weather_events,transform_redfin_data,transform_income,transform_population
+from functions.load_mysql import load_to_mysql
 
-
-def upload_to_s3(folder: str, bucket_name: str) -> None: 
+def upload_to_s3(folder: str, bucket_name: str,**kwargs) -> None: 
     """Uploads new files to S3 bucket""" 
     hook = S3Hook('s3_conn')
     for file in os.listdir(path=folder):
         if '.csv' in file:
             try:
                 hook.load_file(filename=os.path.join(folder,file), key=file, bucket_name=bucket_name)
+                kwargs['ti'].xcom_push(key='new_file', value=True)
             except ValueError:
-                pass
+                kwargs['ti'].xcom_push(key='new_file', value=False)
 
-
-
+# These dags extract the files (each dag for each type of table) from an S3 bucket, 
+# transform it and the uploads it to a different S3 bucket if the file doesn't exits already.
+# If it is a new file, it is uploaded to the database.
 with DAG(
     dag_id='etl_list_rental_price',
     schedule_interval='@once',
@@ -38,6 +40,22 @@ with DAG(
             'bucket_name': 'cleandatagrupo07'
         }
     )
+    task_upload_to_db_listing_prices = PythonOperator(
+        task_id='upload_to_db_listing_prices',
+        python_callable=load_to_mysql,
+        op_kwargs={
+            'file_name': 'listing_prices.csv',
+            'previous_task_id':'upload_to_db_listing_prices'
+        }
+    )
+    task_upload_to_db_rental_prices = PythonOperator(
+        task_id='upload_to_db_rental_prices',
+        python_callable=load_to_mysql,
+        op_kwargs={
+            'file_name': 'rental_prices.csv',
+            'previous_task_id':'upload_to_db_rental_prices'
+        }
+    )
 
 
 with DAG(
@@ -53,11 +71,20 @@ with DAG(
     )
 
     task_upload_to_s3_crime_rate = PythonOperator(
-        task_id='upload_to_s3',
+        task_id='upload_to_s3_crime_rate',
         python_callable=upload_to_s3,
         op_kwargs={
             'folder': os.path.join('datasets','clean_data'),
             'bucket_name': 'cleandatagrupo07'
+        }
+    )
+
+    task_upload_to_db_crime_rate = PythonOperator(
+        task_id='upload_to_db_crime_rate',
+        python_callable=load_to_mysql,
+        op_kwargs={
+            'file_name': 'crime_rate.csv',
+            'previous_task_id':'upload_to_db_crime_rate'
         }
     )
 
@@ -83,6 +110,15 @@ with DAG(
         }
     )
 
+    task_upload_to_db_weather_events = PythonOperator(
+        task_id='upload_to_db_weather_events',
+        python_callable=load_to_mysql,
+        op_kwargs={
+            'file_name': 'weather_events.csv',
+            'previous_task_id':'upload_to_db_weather_events'
+        }
+    )
+
 
 with DAG(
     dag_id='etl_redfin_data',
@@ -102,6 +138,23 @@ with DAG(
         op_kwargs={
             'folder': os.path.join('datasets','clean_data'),
             'bucket_name': 'cleandatagrupo07'
+        }
+    )
+
+    task_upload_to_db_redfin_data_1 = PythonOperator(
+        task_id='upload_to_db_redfin_data_1',
+        python_callable=load_to_mysql,
+        op_kwargs={
+            'file_name': 'homes_sold_&_total_2022.csv',
+            'previous_task_id':'upload_to_db_redfin_data_1'
+        }
+    )
+    task_upload_to_db_redfin_data_2 = PythonOperator(
+        task_id='upload_to_db_redfin_data_2',
+        python_callable=load_to_mysql,
+        op_kwargs={
+            'file_name': 'price_drops_2022.csv',
+            'previous_task_id':'upload_to_db_redfin_data_2'
         }
     )
 
@@ -126,6 +179,16 @@ with DAG(
         }
     )
 
+    task_upload_to_db_income = PythonOperator(
+        task_id='upload_to_db_income',
+        python_callable=load_to_mysql,
+        op_kwargs={
+            'file_name': 'incomebycounty1.csv',
+            'previous_task_id':'upload_to_db_income'
+        }
+    )
+
+
 with DAG(
     dag_id='etl_population',
     schedule_interval='@once',
@@ -146,12 +209,22 @@ with DAG(
             'bucket_name': 'cleandatagrupo07'
         }
     )
+    task_upload_to_db_population = PythonOperator(
+        task_id='upload_to_db_population',
+        python_callable=load_to_mysql,
+        op_kwargs={
+            'file_name': 'population.csv',
+            'previous_task_id':'upload_to_db_population'
+        }
+    )
 
 
 
-task_transform_list_rental_price>>task_upload_to_s3_list_rental_price
-task_transform_crime_rate>>task_upload_to_s3_crime_rate
-task_transform_weather_events>>task_upload_to_s3_weather_events
-task_transform_redfin_data>>task_upload_to_s3_redfin_data
-task_transform_income>>task_upload_to_s3_income
-task_transform_population>>task_upload_to_s3_population
+task_transform_list_rental_price>>task_upload_to_s3_list_rental_price>>task_upload_to_db_listing_prices
+task_upload_to_s3_list_rental_price>>task_upload_to_db_rental_prices
+task_transform_crime_rate>>task_upload_to_s3_crime_rate>>task_upload_to_db_crime_rate
+task_transform_weather_events>>task_upload_to_s3_weather_events>>task_upload_to_db_weather_events
+task_transform_redfin_data>>task_upload_to_s3_redfin_data>>task_upload_to_db_redfin_data_1
+task_upload_to_s3_redfin_data>>task_upload_to_db_redfin_data_2
+task_transform_income>>task_upload_to_s3_income>>task_upload_to_db_income
+task_transform_population>>task_upload_to_s3_population>>task_upload_to_db_population
