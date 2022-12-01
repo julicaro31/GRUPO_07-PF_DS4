@@ -16,8 +16,8 @@ def load_initial():
     """Creates database and tables with their primary and foreign keys"""
     create_database('housing_market',host=host,user=user)
     
-    variables_city = 'IdCity VARCHAR(255) NOT NULL,City VARCHAR(255) NOT NULL,County VARCHAR(255) NOT NULL, State VARCHAR(255) NOT NULL,PRIMARY KEY(IdCity)'
-    create_table('housing_market','city',variables_city,host=host,user=user)
+    variables_city = variables_city = 'IdCity VARCHAR(255) NOT NULL,City VARCHAR(255) NOT NULL,County VARCHAR(255) NOT NULL, State VARCHAR(255) NOT NULL,Latitude DECIMAL(8,5),Longitude DECIMAL(8,5),PRIMARY KEY(IdCity)'
+    create_table('housing_market','city_lat_lon',variables_city,host=host,user=user)
     add_fk('State','housing_market','city','state_code','foreign_state_code_city',host=host,user=user)
 
 
