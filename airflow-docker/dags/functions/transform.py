@@ -74,7 +74,7 @@ def transform_crime_rate():
     states_id['StateId'] = us_state_to_abbrev.values()
     states_id['StateName'] = us_state_to_abbrev.keys()
 
-    states_id.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','states_id_prubea.csv'),index=False)
+    states_id.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','states_id.csv'),index=False)
 
     df2 = pd.DataFrame()
 
