@@ -83,7 +83,7 @@ def transform_crime_rate():
     df2['Population'] = df['Data.Population']
     df2['CrimePropertyRate'] = df['Data.Rates.Property.All']
     df2['CrimeViolentRate'] = df['Data.Rates.Violent.All']
-    df2.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','crime_rate_prueba.csv'),index=False)
+    df2.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','crime_rate.csv'),index=False)
 
 def transform_weather_events():
     df = pd.read_csv(f"s3://rawdatagrupo07/WeatherEvents_Jan2016-Dec2021.csv",
@@ -110,7 +110,7 @@ def transform_weather_events():
     )
 
     df3 = pd.merge(df2, cities, how = 'inner', on=['State','County','City'])
-    df3.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','weather_events_prueba.csv'),columns=['Unique_City_ID','Year', 'Month', 'Type', 'Precipitation(in)', 'Hours'],index=False)
+    df3.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','weather_events.csv'),columns=['Unique_City_ID','Year', 'Month', 'Type', 'Precipitation(in)', 'Hours'],index=False)
 
 
 def transform_redfin_data():
@@ -140,12 +140,12 @@ def transform_redfin_data():
 
     homes_sold_total_2022 = homes_sold_total_id[homes_sold_total_id['PeriodBegin'].dt.year==2022]
     homes_sold_total_2022.dropna(inplace=True)
-    homes_sold_total_2022.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','homes_sold_&_total_2022_prueba.csv'),columns=['Unique_City_ID','PeriodBegin', 'PeriodEnd','HomesSold',
+    homes_sold_total_2022.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','homes_sold_&_total_2022.csv'),columns=['Unique_City_ID','PeriodBegin', 'PeriodEnd','HomesSold',
        'HomesSold_mom', 'HomesSold_yoy', 'Inventory', 'Inventory_mom',
        'Inventory_yoy'],index=False)
 
-    data = data.rename(columns = {'price_drops':'PriceDrops','price_drops_mom':'PriceDrops_mom','price_drops_yoy':'PriceDrops_yoy'})
-    price_drops = data[['PeriodBegin','PeriodEnd','City', 'State','PriceDrops', 'PriceDrops_mom','PriceDrops_yoy']]
+    data = data.rename(columns = {'price_drops':'PriceDrops','price_drops_mom':'PriceDrops_mom','price_drops_yoy':'PriceDrops_yoy','median_list_price':'MedianListPrice'})
+    price_drops = data[['PeriodBegin','PeriodEnd','City', 'State','PriceDrops', 'PriceDrops_mom','PriceDrops_yoy','MedianListPrice']]
     price_drops_2022 = price_drops[price_drops.PeriodBegin.dt.year==2022]
     price_drops_id_2022 = pd.merge(price_drops_2022, cities, how = 'inner', on=['State','City'])
     price_drops_id_2022.dropna(inplace=True)
@@ -153,7 +153,7 @@ def transform_redfin_data():
     price_drops_id_2022.PriceDrops_mom = price_drops_id_2022.PriceDrops_mom*100
     price_drops_id_2022.PriceDrops_yoy = price_drops_id_2022.PriceDrops_yoy*100
 
-    price_drops_id_2022.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','price_drops_2022_prueba.csv'),columns=['Unique_City_ID','PeriodBegin', 'PeriodEnd','PriceDrops','PriceDrops_mom', 'PriceDrops_yoy'],index=False)
+    price_drops_id_2022.to_csv(os.path.join(os.getcwd(),'datasets','clean_data','price_drops_2022.csv'),columns=['Unique_City_ID','PeriodBegin', 'PeriodEnd','PriceDrops','PriceDrops_mom', 'PriceDrops_yoy','MedianListPrice'],index=False)
 
 
 def transform_income():

@@ -54,7 +54,7 @@ def load_initial():
     add_fk('IdCity','housing_market','sells_inventory','city','foreign_IdCity_sells_inventory',host=host,user=user)
     add_fk('PeriodBegin','housing_market','sells_inventory','calendar','foreign_date_period_begin',column_name_parent='Date',host=host,user=user)
 
-    variables = 'IdCity VARCHAR(255) NOT NULL,PeriodBegin DATE,PeriodEnd DATE,PriceDrops DECIMAL(10,7),PriceDrops_mom DECIMAL(10,7),PriceDrops_yoy DECIMAL(10,7)'
+    variables = 'IdCity VARCHAR(255) NOT NULL,PeriodBegin DATE,PeriodEnd DATE,PriceDrops DECIMAL(10,7),PriceDrops_mom DECIMAL(10,7),PriceDrops_yoy DECIMAL(10,7),MedianListPrice DECIMAL(15,5)'
     create_table('housing_market','price_drops',variables,host=host,user=user)
     add_fk('IdCity','housing_market','price_drops','city','foreign_IdCity_price_drops',host=host,user=user)
     add_fk('PeriodBegin','housing_market','price_drops','calendar','price_drops_date_period_begin',column_name_parent='Date',host=host,user=user)
