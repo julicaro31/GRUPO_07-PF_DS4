@@ -17,7 +17,7 @@ The data is also uploaded to a MySQL database in the cloud using RDS from Amazon
 
 The processes of extraction, transformation and load are orchestrated using Apache Airflow DAGs. Working with Airflow helps monitoring and automatizing the pipelines. Also, the workflow can be visualized using the Airflow UI.
 
-<img src="_src/DER_housing_market.png"  height="400">
+<img src="_src/etl.png"  height="400">
 
 ## DER
 
