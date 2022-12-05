@@ -21,7 +21,7 @@ The processes of extraction, transformation and load are orchestrated using Apac
 
 ## DER
 
-The following image shows the Entity Relationship Diagram of our database:
+The following image shows the Entity Relationship Diagram of our database.
 
 <img src="_src/DER_housing_market.png"  height="800">
 
