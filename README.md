@@ -41,6 +41,7 @@ In the following image we can see there's a significant partial autocorrelation 
 
 ### Results
 
+The Mean Absolute Percentage Error is 1.09 %.
 The following image shows the house price predictions for 2023 using this model.
 
 <img src="_src/results_sarima.png"  height="470">
