@@ -22,7 +22,7 @@ The processes of extraction, transformation and load are orchestrated using Apac
 
 The following image shows the Entity Relationship Diagram of our database:
 
-<img src="_src/DER_housing_market.png"  height="500">
+<img src="_src/DER_housing_market.png"  height="700">
 
 
 # Machine Learning
@@ -37,10 +37,10 @@ One approach is using a time series the Seasonal ARIMA model to predict the hous
 
 In the following image we can see there's a significant partial autocorrelation at 12. This means that the price at a certain month depends on the price at the same month a year ago.
 
-<img src="_src/autocorrelation.png"  height="250">
+<img src="_src/autocorrelation.png"  height="500">
 
 ### Results
 
 The following image shows the house price predictions for 2023 using this model.
 
-<img src="_src/results_sarima.png"  height="250">
+<img src="_src/results_sarima.png"  height="500">
