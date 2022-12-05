@@ -1,47 +1,46 @@
-# **PROYECTO GRUPAL N°2**
+# **HOUSING MARKET**
+
+Given the fact that the real estate market has many ups and downs regarding the properties values, it is important to know the economic impact it could have. This can vary over time and there can be economic situations that affect the market as in 2008, when a recessive period occurred.
+
+This project is focused on the study of the real estate market in the United States. 
+Different areas of this country will be analyzed to find the best places to make an investment. Several variables will be taken into account such as the property type, time, weather, personal income and crime rate.
 
 
-A lo largo de los últimos años, especialmente desde el 2008 hasta la fecha, el mercado inmobiliario mundial, y más concretamente el estadounidense, ha sufrido grandes subidas y bajadas, no solo generando un impacto en esa industria, sino que también con consecuencias económicas de todo tipo.  
-En este proyecto les proponemos hacer un estudio del mercado de viviendas de los Estados Unidos, donde el enfoque lo van a poder elegir ustedes como grupo. En ambas propuestas que les vamos a dar, el contexto sería el siguiente:  
+# Technology Stack
 
-:house: :house_with_garden: :department_store: El equipo/ consultora es contradado por una empresa de bienes raíces, con el fin de solucionar y/o investigar sobre una de las dos siguientes temáticas (antes de que surja la duda, si, pueden realizar ambas propuestas):
+All the raw data obtained from different web sources is stored in a S3 AWS bucket.
+This data is then extracted from the bucket and transformed using Python, mostly Pandas library in order to have the information needed in a structured and uniform format.
 
-1. Primer Propuesta: Hacer un análisis donde se determine si la situación inmobiliaria de USA se encuentra entrando en un período recesivo (no es condición necesaria tomar datos hasta 2022, se pueden tomar otros intervalos sin ningún problema). En caso de que efectivamente sea el caso, dar las recomendaciones pertinentes que crean, siempre basadas y respaldadas en los datos que pudieron recabar. Spoiler Alert: si determinan que la economía tiene una etapa recesiva, puede ser también una estrategia adecuada invertir más en inmuebles.   
-:chart_with_downwards_trend: :chart_with_downwards_trend: :chart_with_downwards_trend:
+Once the data is clean, it is uploaded to a different S3 bucket
 
-2. Segunda Propuesta: Hacer un análisis de en que zona y/o zonas de los Estados Unidos conviene realizar inversiones inmobiliarias, independientemente de la situación económica que pueda llegar a estar sucediendo. En esta propuesta sería realizar e informar a la empresa que los contrata, por ejemplo, que tipo de departamento comprar y en que lugar, como también en que momento del año es mejor comprar, cuanto tiempo se debería esperar desde que un inmueble entra al mercado hasta realizar la compra efectiva, etc.
-:money_with_wings: :money_with_wings: :money_with_wings:   
+The data is also uploaded to a MySQL database in the cloud using RDS from Amazon Web Services. One of the advantages of working in the cloud is that all members of the team can access the database from their computers and use the cloud storage resources. Some security rules are set so only certain IPs can have access. 
 
-De nuevo, pueden elegir las dos propuestas para su projecto, y realizar los pertientes análisis e investigaciones sobre cada una de las dos temáticas que, hasta cierto punto, pueden llegar a tener bastante en común.
+The processes of extraction, transformation and load are orchestrated using Apache Airflow DAGs. Working with Airflow helps monitoring and automatizing the pipelines. Also, the workflow can be visualized using the Airflow UI.
 
-## **Datasets**
-De las siguientes fuentes de información pueden sacar y armar sus bases de datos. Pueden utilizar los que consideren necesarios, como también añadir más fuentes externas que ustedes encuentren (API's, otros datasets, etc.):
 
-- Zillow Economic Data: https://drive.google.com/drive/folders/1Cvt-wa0GALlQ2KHJJfOaDF-53UPK6tJK?usp=share_link
-- Zillow House Price Data: https://drive.google.com/drive/folders/1Cvt-wa0GALlQ2KHJJfOaDF-53UPK6tJK?usp=share_link
-- Zillow Rent Index: https://drive.google.com/drive/folders/1Cvt-wa0GALlQ2KHJJfOaDF-53UPK6tJK?usp=share_link
-- US Housing Market Factors: Ver en carpeta Datasets
-- City and Town Population: https://www.census.gov/data/tables/time-series/demo/popest/2020s-total-cities-and-towns.html#ds
-- Population Estimates and Projections: https://www.census.gov/data/developers/data-sets/popest-popproj.html
-- Redfin: https://www.redfin.com/news/data-center/
-- Diversas API's:  
-    * US Real State: https://rapidapi.com/datascraper/api/us-real-estate/
-    * Zillow unofficial 1: https://rapidapi.com/apimaker/api/zillow-com1/
-    * Zillow unofficial 2: https://rapidapi.com/s.mahmoud97/api/zillow56/
-   
-*Recomendamos el uso de API's para este proyecto, no solamente las que les enlistamos aquí, sino también externas, como podría ser de clima (mucho muy importante las condiciones climáticas extremas).  
-Además, alentamos al uso del data center de Redfin. Es una base de datos con más de 4 millones de registros, los cuales van a ser fundamentales para el desarrollo de su trabajo*
-   
-## **Objetivos (pasados en limpio)**
+## DER
 
-- Buscar indicadores que determinen, dada información de años anteriores, si se está en una situacióno recesiva
-- Encontrar las mejores zonas para invertir en:
-  * Departamentos
-  * Casas
-  * Condominios
-  * Edificios
-  * Complejos de casas
+The following image shows the Entity Relationship Diagram of our database:
 
-## Disclaimer  
-De parte del equipo de Henry se quiere aclarar y remarcar que los fines de los proyectos propuestos son exclusivamente pedagógicos, con el objetivo de realizar proyectos que simulen un entorno laboral, en el cual se trabajen diversas temáticas ajustadas a la realidad.
- No reflejan necesariamente la filosofía y valores de la organización. Además, Henry no alienta ni tampoco recomienda a los alumnos y/o cualquier persona leyendo los repositorios (y entregas de proyectos) que tomen acciones en base a los datos que pudieran o no haber recabado. Toda la información expuesta y resultados obtenidos en los proyectos, nunca deben ser tomados en cuenta para la toma real de decisiones (especialmente en la temática de finanzas, salud, política, etc.).
+<img src="_src/DER_housing_market.png"  height="500">
+
+
+# Machine Learning
+
+We train different models to predict the house prices in the United States.
+
+## Time Series
+
+One approach is using a time series the Seasonal ARIMA model to predict the house prices in 2023.
+
+### Why seasonal?
+
+In the following image we can see there's a significant partial autocorrelation at 12. This means that the price at a certain month depends on the price at the same month a year ago.
+
+<img src="_src/autocorrelation.png"  height="250">
+
+### Results
+
+The following image shows the house price predictions for 2023 using this model.
+
+<img src="_src/results_sarima.png"  height="250">
