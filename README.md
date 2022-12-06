@@ -16,6 +16,7 @@ Once the data is clean, it is uploaded to a different S3 bucket
 The data is also uploaded to a MySQL database in the cloud using RDS from Amazon Web Services. One of the advantages of working in the cloud is that all members of the team can access the database from their computers and use the cloud storage resources. Some security rules are set so only certain IPs can have access. 
 
 The processes of extraction, transformation and load are orchestrated using Apache Airflow DAGs. Working with Airflow helps monitoring and automatizing the pipelines. Also, the workflow can be visualized using the Airflow UI.
+An incremental load is shown in this video: https://www.youtube.com/watch?v=3qUcwh5t-H8
 
 <img src="_src/etl.jpg"  height="400">
 
@@ -42,7 +43,7 @@ In the following image we can see there's a significant partial autocorrelation 
 
 ### Results
 
-The Mean Absolute Percentage Error is 1.09 %.<br>
-The following image shows the house price predictions for 2023 using this model.
+The Mean Absolute Percentage Error for this model is 1.09 %.<br>
+The following image shows the house price predictions for 2023.
 
 <img src="_src/predictions_sarima.png"  height="470">

@@ -74,10 +74,10 @@ def load_initial():
     load_data(os.path.join(os.getcwd(),'datasets','clean_data','cities.csv'),'housing_market','city',host=host,user=user)
     load_data(os.path.join(os.getcwd(),'datasets','clean_data','states_id.csv'),'housing_market','state_code',host=host,user=user)
 
-def load_to_mysql(file_name,previous_task_id,**kwargs):
+def load_to_mysql(file_name,previous_task_id,table_name,**kwargs):
     """Loads file to database depending on the return value from the previous task"""
     ti = kwargs['ti']
-    new = ti.xcom_pull(key='new_file', task_ids=previous_task_id)
+    new = ti.xcom_pull(key='new_file',task_ids=previous_task_id)
     if new:
-        load_data(os.path.join(os.getcwd(),'datasets','clean_data',file_name),'housing_market','city',host=host,user=user)
-
+        load_data(os.path.join(os.getcwd(),'datasets','clean_data',file_name),'housing_market',table_name,host=host,user=user)
+    

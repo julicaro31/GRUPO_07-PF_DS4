@@ -9,13 +9,18 @@ from functions.load_mysql import load_to_mysql
 def upload_to_s3(folder: str, bucket_name: str,**kwargs) -> None: 
     """Uploads new files to S3 bucket""" 
     hook = S3Hook('s3_conn')
+    new_file=False
     for file in os.listdir(path=folder):
         if '.csv' in file:
             try:
                 hook.load_file(filename=os.path.join(folder,file), key=file, bucket_name=bucket_name)
-                kwargs['ti'].xcom_push(key='new_file', value=True)
+                new_file=True
             except ValueError:
-                kwargs['ti'].xcom_push(key='new_file', value=False)
+                pass
+    if new_file:
+        kwargs['ti'].xcom_push(key='new_file', value=True)
+    else:
+        kwargs['ti'].xcom_push(key='new_file', value=False)
 
 # These dags extract the files (each dag for each type of table) from an S3 bucket, 
 # transform it and the uploads it to a different S3 bucket if the file doesn't exits already.
@@ -38,23 +43,26 @@ with DAG(
         op_kwargs={
             'folder': os.path.join('datasets','clean_data'),
             'bucket_name': 'cleandatagrupo07'
-        }
+        },
     )
     task_upload_to_db_listing_prices = PythonOperator(
         task_id='upload_to_db_listing_prices',
+        provide_context = True,
         python_callable=load_to_mysql,
         op_kwargs={
-            'file_name': 'listing_prices.csv',
-            'previous_task_id':'upload_to_db_listing_prices'
+            'file_name': 'listing_prices(1).csv',
+            'previous_task_id':'upload_to_s3_list_rental_price',
+            'table_name': 'listing_price'
         }
     )
     task_upload_to_db_rental_prices = PythonOperator(
         task_id='upload_to_db_rental_prices',
         python_callable=load_to_mysql,
         op_kwargs={
-            'file_name': 'rental_prices.csv',
-            'previous_task_id':'upload_to_db_rental_prices'
-        }
+            'file_name': 'rental_prices(1).csv',
+            'previous_task_id':'upload_to_s3_list_rental_price',
+            'table_name': 'rental_price'
+        },
     )
 
 
@@ -84,7 +92,7 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'crime_rate.csv',
-            'previous_task_id':'upload_to_db_crime_rate'
+            'previous_task_id':'upload_to_s3_crime_rate'
         }
     )
 
@@ -115,7 +123,7 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'weather_events.csv',
-            'previous_task_id':'upload_to_db_weather_events'
+            'previous_task_id':'upload_to_s3_weather_events'
         }
     )
 
@@ -146,7 +154,7 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'homes_sold_&_total_2022.csv',
-            'previous_task_id':'upload_to_db_redfin_data_1'
+            'previous_task_id':'upload_to_s3'
         }
     )
     task_upload_to_db_redfin_data_2 = PythonOperator(
@@ -154,7 +162,7 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'price_drops_2022.csv',
-            'previous_task_id':'upload_to_db_redfin_data_2'
+            'previous_task_id':'upload_to_s3'
         }
     )
 
@@ -184,7 +192,7 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'incomebycounty1.csv',
-            'previous_task_id':'upload_to_db_income'
+            'previous_task_id':'upload_to_s3_income'
         }
     )
 
@@ -214,7 +222,7 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'population.csv',
-            'previous_task_id':'upload_to_db_population'
+            'previous_task_id':'upload_to_s3_population'
         }
     )
 
