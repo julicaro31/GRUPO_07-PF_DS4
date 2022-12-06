@@ -24,7 +24,7 @@ An incremental load is shown in this video: https://www.youtube.com/watch?v=3qUc
 
 The following image shows the Entity Relationship Diagram of our database.
 
-<img src="_src/DER_housing_market.png"  height="800">
+<img src="_src/DER.png"  height="800">
 
 
 # Machine Learning
