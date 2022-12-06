@@ -47,3 +47,8 @@ The Mean Absolute Percentage Error for this model is 1.09 %.<br>
 The following image shows the house price predictions for 2023.
 
 <img src="_src/predictions_sarima.png"  height="470">
+
+
+## Disclaimer
+
+This is our the final project from SoyHenry's Data Science bootcamp. It is just for educational purposes, we are not giving any finacial advise.
