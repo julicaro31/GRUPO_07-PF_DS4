@@ -92,7 +92,8 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'crime_rate.csv',
-            'previous_task_id':'upload_to_s3_crime_rate'
+            'previous_task_id':'upload_to_s3_crime_rate',
+            'table_name': 'crime_rate'
         }
     )
 
@@ -123,7 +124,8 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'weather_events.csv',
-            'previous_task_id':'upload_to_s3_weather_events'
+            'previous_task_id':'upload_to_s3_weather_events',
+            'table_name': 'weather_event'
         }
     )
 
@@ -154,7 +156,8 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'homes_sold_&_total_2022.csv',
-            'previous_task_id':'upload_to_s3'
+            'previous_task_id':'upload_to_s3',
+            'table_name': 'sales_inventory'
         }
     )
     task_upload_to_db_redfin_data_2 = PythonOperator(
@@ -162,7 +165,8 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'price_drops_2022.csv',
-            'previous_task_id':'upload_to_s3'
+            'previous_task_id':'upload_to_s3',
+            'table_name': 'price_drop'
         }
     )
 
@@ -192,7 +196,8 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'incomebycounty1.csv',
-            'previous_task_id':'upload_to_s3_income'
+            'previous_task_id':'upload_to_s3_income',
+            'table_name': 'personal income'
         }
     )
 
@@ -222,7 +227,8 @@ with DAG(
         python_callable=load_to_mysql,
         op_kwargs={
             'file_name': 'population.csv',
-            'previous_task_id':'upload_to_s3_population'
+            'previous_task_id':'upload_to_s3_population',
+            'table_name': 'population'
         }
     )
 

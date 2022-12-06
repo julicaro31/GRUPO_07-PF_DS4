@@ -50,14 +50,14 @@ def load_initial():
     add_fk('State','housing_market','crime_rate','state_code','foreign_state_code_crime_rate',host=host,user=user)
 
     variables = 'IdCity VARCHAR(255) NOT NULL,PeriodBegin DATE,PeriodEnd DATE,HomesSold DECIMAL(12,5),HomesSold_mom DECIMAL(10,5),HomesSold_yoy DECIMAL(10,5),Inventory DECIMAL(12,5),Inventory_mom DECIMAL(10,5),Inventory_yoy DECIMAL(10,5)'
-    create_table('housing_market','sells_inventory',variables,host=host,user=user)
-    add_fk('IdCity','housing_market','sells_inventory','city','foreign_IdCity_sells_inventory',host=host,user=user)
-    add_fk('PeriodBegin','housing_market','sells_inventory','calendar','foreign_date_period_begin',column_name_parent='Date',host=host,user=user)
+    create_table('housing_market','sales_inventory',variables,host=host,user=user)
+    add_fk('IdCity','housing_market','sales_inventory','city','foreign_IdCity_sells_inventory',host=host,user=user)
+    add_fk('PeriodBegin','housing_market','sales_inventory','calendar','foreign_date_period_begin',column_name_parent='Date',host=host,user=user)
 
     variables = 'IdCity VARCHAR(255) NOT NULL,PeriodBegin DATE,PeriodEnd DATE,PriceDrops DECIMAL(10,7),PriceDrops_mom DECIMAL(10,7),PriceDrops_yoy DECIMAL(10,7),MedianListPrice DECIMAL(15,5)'
-    create_table('housing_market','price_drops',variables,host=host,user=user)
-    add_fk('IdCity','housing_market','price_drops','city','foreign_IdCity_price_drops',host=host,user=user)
-    add_fk('PeriodBegin','housing_market','price_drops','calendar','price_drops_date_period_begin',column_name_parent='Date',host=host,user=user)
+    create_table('housing_market','price_drop',variables,host=host,user=user)
+    add_fk('IdCity','housing_market','price_drop','city','foreign_IdCity_price_drops',host=host,user=user)
+    add_fk('PeriodBegin','housing_market','price_drop','calendar','price_drops_date_period_begin',column_name_parent='Date',host=host,user=user)
 
     variables = 'IdCity VARCHAR(255) NOT NULL,Year INTEGER,Month INTEGER,Type VARCHAR(255),Precipitation_inch DECIMAL(16,10),Hours DECIMAL(10,6)'
     create_table('housing_market','weather_event',variables,host=host,user=user)
