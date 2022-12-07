@@ -59,6 +59,13 @@ It is detected that the type of property that presents the greatest price variat
 
 It should be noted that the places with the highest prices are also places with a high demographic concentration. In addition to the fact that the purchase and rental of condominiums and duplex houses is increasing year after year.<br>
 
+Except for 2018 where we had a small negative variation of 0.90% we can see that from 2012 to the present we have a constant positive variation of sales, with some peaks like in 2013 and 2015 of around 13%.  Although the current year is also having very low numbers compared to the previous year, we only work with data up to September so we will not rush to draw conclusions about 2022.<br>
+In terms of sales movement we can see that the cities of Chicago, Houston and Los Angeles; and the states of California, Florida and Texas stand out. Also that this movement is concentrated yin the middle of the year.<br>
+Taking into account this information we can say that the trend in terms of variation of home sales is positive, which is an interesting factor when investing.<br>
+ 
+As for the population variation, we can see that from 2010 to the present the variations per year have been decreasing until 2020, with a surprising rebound in 2021. beyond that we can see that the population growth is constant, so we can conclude that the trend is increasing.<br>
+In terms of population we can see that the cities of New York, Los Angeles and Phoenix; and the states of New York, California, and Texas stand out.
+
 ## Dashboard
 
 The information within the dashboard is distributed by year and by state or city in the United States; This can be selected according to the area of interest and the available data for the area will be provided.
