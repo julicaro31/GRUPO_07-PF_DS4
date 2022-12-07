@@ -52,7 +52,7 @@ The following image shows the house price predictions for 2023.
 
 ## Dashboard
 
-La información dentro de dashboard se encuentra distribuida por año y por estado o ciudad en los estados unidos; esto dese puede seleccionar de acuerdo a la zona de interes y se brindaran los datos disponibles de la zona.
+The information within the dashboard is distributed by year and by state or city in the United States; This can be selected according to the area of interest and the available data for the area will be provided.
 
 The dashboard contains an analysis of the following items:
 
