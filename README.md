@@ -54,6 +54,7 @@ It is detected that the states of New York, California and Florida have cities w
 
 In 2012, the real estate market began to recover with respect to the variation in the sale price of last year, so that the sale prices do not present a variation of more than 20%. For the year 2013, the variation of the sale price with respect to last year may rise more than 40% in some areas. For the following years, the price variations with respect to previous years are positive, therefore, in general, the variations range from 10% to 20%.
 It is detected that the type of property that presents the greatest price variations compared to previous years is condominium-type and duplex-type homes, while residential houses for a single family have a positive but constant variation.<br>
+![cities](https://user-images.githubusercontent.com/103619850/206169021-c72eba7f-1b94-4381-9b55-d614fc6d540f.png)
 
 It should be noted that the places with the highest prices are also places with a high demographic concentration. In addition to the fact that the purchase and rental of condominiums and duplex houses is increasing year after year.<br>
 
