@@ -48,7 +48,7 @@ The following image shows the house price predictions for 2023.
 
 <img src="_src/predictions_sarima.png"  height="470">
 
-# Data analisys
+# Data analysis
 
 It is detected that the states of New York, California and Florida have cities where a positive variation in the increase in sales prices is observed. Regarding the variation in rental prices, they also follow the same trend where the main cities of these states present a greater amount of collection for this concept. <br>
 
