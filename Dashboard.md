@@ -10,5 +10,7 @@ This dashboard contains the analysis of:
 - Rent price variation.
 - Days on Market
 - Sales variation
-- Population
+- Population 
+<br>
+
 ![portada](https://user-images.githubusercontent.com/103619850/206155868-133e8413-16e8-4d2e-925c-09f59b7da8a2.png)
